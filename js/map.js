@@ -24,10 +24,15 @@ const typeIcons = {
 // Função para criar um ícone personalizado
 function createCustomIcon(point) {
     const iconType = point.types[0]?.icon || 'delete'; // Usa o primeiro tipo ou 'delete' como padrão
+    const typeCount = point.types.length; // Conta o número de tipos de lixo
+    const showTypeCount = activeFilters.size > 1 && typeCount > 1; // Mostra o número apenas se mais de um filtro estiver ativo e o ponto tiver mais de um tipo
     return L.divIcon({
-        html: `<div class="custom-marker" style="background-color: #4CAF50; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                   <span class="material-icons" style="font-size: 20px; color: white;">${typeIcons[iconType]}</span>
-               </div>`,
+        html: `
+            <div class="custom-marker" style="position: relative; background-color: #4CAF50; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                ${showTypeCount ? `<span class="type-count" style="position: absolute; top: -10px; right: -10px; background-color: red; color: white; font-size: 12px; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">${typeCount}</span>` : ''}
+                <span class="material-icons" style="font-size: 20px; color: white;">${typeIcons[iconType]}</span>
+            </div>
+        `,
         className: 'custom-marker-container',
         iconSize: [32, 32]
     });
