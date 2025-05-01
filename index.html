@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descarteja - Pontos de Coleta</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" />
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <header class="header">
+        <h1><span class="material-icons">recycling</span> Descarteja</h1>
+    </header>
+
+    <div class="floating-menu">
+        <button class="floating-btn">
+            <span class="material-icons">filter_list</span>
+        </button>
+        <div class="filter-container">
+            <button class="filter-btn" data-type="recyclable">
+                <span class="material-icons">recycling</span>
+                Reciclável
+            </button>
+            <button class="filter-btn" data-type="electronic">
+                <span class="material-icons">devices</span>
+                Eletrônicos
+            </button>
+            <button class="filter-btn" data-type="organic">
+                <span class="material-icons">eco</span>
+                Orgânico
+            </button>
+            <button class="filter-btn" data-type="hazardous">
+                <span class="material-icons">warning</span>
+                Perigoso
+            </button>
+            <button class="filter-btn" data-type="general">
+                <span class="material-icons">delete</span>
+                Geral
+            </button>
+        </div>
+    </div>
+
+    <main>
+        <div id="map"></div>
+    </main>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="js/collectionPoints.js"></script>
+    <script src="js/map.js"></script>
+</body>
+</html>
