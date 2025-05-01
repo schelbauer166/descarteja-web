@@ -11,9 +11,132 @@
 </head>
 <body>
     <header class="header">
-        <h1><span class="material-icons">recycling</span> Descarteja</h1>
+        <h1><span class="material-icons">recycling</span> Descarteja
+            <button class="login-btn">
+                <span class="material-icons">login</span>
+            </button>
+        </h1>
     </header>
 
+    <div class="login-menu">
+        <label for="username">Login</label>
+        <input type="text" id="username" placeholder="Usuário" />
+        <label for="password" style="margin-top: 10px;">Senha</label>
+        <input type="password" id="password" placeholder="Senha" />
+        <button class="submit-btn">Entrar</button>
+        <button class="logout-btn">Sair</button>
+    </div>
+
+    <style>
+        .login-menu {
+            display: none;
+            position: absolute;
+            top: 50px;
+            right: 20px;
+            width: 300px;
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            border-radius: 5px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .login-menu.show {
+            display: flex;
+        }
+
+        .login-menu input {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .login-menu label {
+            margin-top: 10px;
+        }
+
+        .submit-btn,
+        .logout-btn {
+            align-self: center;
+        }
+
+        .logout-btn {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .logout-btn:hover {
+            background-color: #e53935;
+        }
+    </style>
+    <script>
+        const loginBtn = document.querySelector('.login-btn');
+        const loginMenu = document.querySelector('.login-menu');
+
+        loginBtn.addEventListener('click', () => {
+            loginMenu.classList.toggle('show');
+        });
+
+        document.addEventListener('click', (event) => {
+            if (!loginMenu.contains(event.target) && !loginBtn.contains(event.target)) {
+                loginMenu.classList.remove('show');
+            }
+        });
+    </script>
+
+    <style>
+        .login-menu {
+            display: none;
+            position: absolute;
+            top: 50px;
+            right: 20px;
+            width: 300px;
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .login-menu.show {
+            display: block;
+        }
+
+        .login-btn {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .submit-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
     <div class="floating-menu">
         <button class="floating-btn">
             <span class="material-icons">filter_list</span>
