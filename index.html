@@ -442,6 +442,42 @@
         .save-btn:hover {
             background-color: #45a049;
         }
+
+        .feedback {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-family: 'Poppins', sans-serif;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .feedback.error {
+            background-color: #ffebee;
+            color: #c62828;
+            border: 1px solid #ffcdd2;
+        }
+
+        .feedback.success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #c8e6c9;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .loading {
+            animation: spin 1s linear infinite;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
     </style>
     <link rel="stylesheet" href="css/styles.css">
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -472,40 +508,94 @@
             }
         });
 
+        // Validação do formulário
+        function validateForm() {
+            const name = document.getElementById('pointName').value.trim();
+            const description = document.getElementById('pointDescription').value.trim();
+            const latitude = parseFloat(document.getElementById('latitude').value);
+            const longitude = parseFloat(document.getElementById('longitude').value);
+            const selectedTypes = document.querySelectorAll('.checkbox-group input:checked');
+
+            let errors = [];
+
+            if (!name) errors.push('Nome do ponto é obrigatório');
+            if (!description) errors.push('Descrição é obrigatória');
+            if (isNaN(latitude) || latitude < -90 || latitude > 90) errors.push('Latitude inválida');
+            if (isNaN(longitude) || longitude < -180 || longitude > 180) errors.push('Longitude inválida');
+            if (selectedTypes.length === 0) errors.push('Selecione pelo menos um tipo de coleta');
+
+            return errors;
+        }
+
+        // Feedback visual
+        function showFeedback(message, type = 'error') {
+            const feedbackDiv = document.createElement('div');
+            feedbackDiv.className = `feedback ${type}`;
+            feedbackDiv.textContent = message;
+            document.querySelector('.modal-content').insertBefore(feedbackDiv, document.querySelector('.modal-buttons'));
+            
+            setTimeout(() => feedbackDiv.remove(), 3000);
+        }
+
         // Salvar novo ponto
         addPointForm.addEventListener('submit', async (event) => {
             event.preventDefault();
 
-            // Coletar dados do formulário
-            const name = document.getElementById('pointName').value;
-            const description = document.getElementById('pointDescription').value;
-            const latitude = parseFloat(document.getElementById('latitude').value);
-            const longitude = parseFloat(document.getElementById('longitude').value);
-            
-            // Coletar tipos selecionados
-            const selectedTypes = Array.from(document.querySelectorAll('.checkbox-group input:checked'))
-                .map(checkbox => ({
-                    icon: checkbox.value,
-                    name: checkbox.parentElement.textContent.trim(),
-                    description: getTypeDescription(checkbox.value)
-                }));
+            const errors = validateForm();
+            if (errors.length > 0) {
+                errors.forEach(error => showFeedback(error));
+                return;
+            }
 
-            // Criar novo ponto
-            const newPoint = {
-                id: crypto.randomUUID(),
-                name,
-                description,
-                types: selectedTypes,
-                coordinate: { latitude, longitude }
-            };
+            // Mostrar loading
+            const saveBtn = document.querySelector('.save-btn');
+            const originalText = saveBtn.textContent;
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<span class="material-icons loading">sync</span> Salvando...';
 
-            // Adicionar ao mock e atualizar mapa
-            await collectionPointsClient.addCollectionPoint(newPoint);
-            await updateMarkers();
+            try {
+                // Coletar dados do formulário
+                const name = document.getElementById('pointName').value.trim();
+                const description = document.getElementById('pointDescription').value.trim();
+                const latitude = parseFloat(document.getElementById('latitude').value);
+                const longitude = parseFloat(document.getElementById('longitude').value);
+                
+                // Coletar tipos selecionados
+                const selectedTypes = Array.from(document.querySelectorAll('.checkbox-group input:checked'))
+                    .map(checkbox => ({
+                        icon: checkbox.value,
+                        name: checkbox.parentElement.textContent.trim(),
+                        description: getTypeDescription(checkbox.value)
+                    }));
 
-            // Fechar modal e limpar formulário
-            modal.classList.remove('show');
-            addPointForm.reset();
+                // Criar novo ponto
+                const newPoint = {
+                    id: crypto.randomUUID(),
+                    name,
+                    description,
+                    types: selectedTypes,
+                    coordinate: { latitude, longitude }
+                };
+
+                // Adicionar ao mock e atualizar mapa
+                await collectionPointsClient.addCollectionPoint(newPoint);
+                await updateMarkers();
+
+                // Fechar modal e limpar formulário
+                modal.classList.remove('show');
+                addPointForm.reset();
+
+                // Feedback de sucesso
+                showFeedback('Ponto de coleta adicionado com sucesso!', 'success');
+
+            } catch (error) {
+                showFeedback('Erro ao salvar o ponto de coleta. Tente novamente.');
+            } finally {
+                // Restaurar botão
+                saveBtn.disabled = false;
+                saveBtn.textContent = originalText;
+            }
+
         });
 
         // Função auxiliar para obter descrição do tipo
