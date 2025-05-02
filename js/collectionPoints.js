@@ -54,6 +54,31 @@ const USE_MOCK_DATA = true;
 
 // Cliente para buscar pontos de coleta
 class CollectionPointsClient {
+    async addCollectionPoint(newPoint) {
+        if (USE_MOCK_DATA) {
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    mockCollectionPoints.push(newPoint);
+                    resolve(newPoint);
+                }, 500);
+            });
+        } else {
+            try {
+                const response = await fetch(`${API_BASE_URL}/places`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(newPoint)
+                });
+                return await response.json();
+            } catch (error) {
+                console.error('Erro ao adicionar ponto de coleta:', error);
+                throw new Error(`Falha ao adicionar ponto de coleta: ${error.message}`);
+            }
+        }
+    }
+
     async getCollectionPoints() {
         if (USE_MOCK_DATA) {
             // Retorna dados mockados com delay para simular chamada API
@@ -69,7 +94,7 @@ class CollectionPointsClient {
                 return await response.json();
             } catch (error) {
                 console.error('Erro ao buscar pontos de coleta:', error);
-                return [];
+                throw new Error(`Falha ao carregar pontos de coleta: ${error.message}`);
             }
         }
     }
@@ -92,7 +117,7 @@ class CollectionPointsClient {
                 return await response.json();
             } catch (error) {
                 console.error('Erro ao buscar pontos de coleta por tipo:', error);
-                return [];
+                throw new Error(`Falha ao filtrar pontos por tipo: ${error.message}`);
             }
         }
     }
