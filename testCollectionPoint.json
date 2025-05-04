@@ -1,0 +1,23 @@
+{
+    "id": "a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6",
+    "name": "Novo Ponto de Coleta",
+    "description": "Descrição do novo ponto de coleta.",
+    "types": [
+        {
+            "icon": "recyclable",
+            "name": "Reciclável",
+            "description": "Materiais recicláveis como papel e plástico."
+        },
+        {
+            "icon": "electronic",
+            "name": "Eletrônicos",
+            "description": "Equipamentos eletrônicos como celulares."
+        }
+    ],
+    "coordinate": {
+        "latitude": -26.123456,
+        "longitude": -49.789012
+    },
+    "createdAt": "2023-10-01T12:00:00Z",
+    "updatedAt": "2023-10-01T12:00:00Z"
+}

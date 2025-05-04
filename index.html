@@ -562,11 +562,36 @@
                 
                 // Coletar tipos selecionados
                 const selectedTypes = Array.from(document.querySelectorAll('.checkbox-group input:checked'))
-                    .map(checkbox => ({
-                        icon: checkbox.value,
-                        name: checkbox.parentElement.textContent.trim(),
-                        description: getTypeDescription(checkbox.value)
-                    }));
+                    .map(checkbox => {
+                        const typeMap = {
+                            recyclable: {
+                                icon: 'recyclable',
+                                name: 'Reciclável',
+                                description: 'Materiais que podem ser reciclados como papel, plástico, vidro e metal'
+                            },
+                            electronic: {
+                                icon: 'electronic',
+                                name: 'Eletrônico',
+                                description: 'Equipamentos eletrônicos e seus componentes'
+                            },
+                            organic: {
+                                icon: 'organic',
+                                name: 'Orgânico',
+                                description: 'Resíduos de origem animal ou vegetal'
+                            },
+                            hazardous: {
+                                icon: 'hazardous',
+                                name: 'Perigoso',
+                                description: 'Materiais tóxicos, inflamáveis ou prejudiciais ao meio ambiente'
+                            },
+                            general: {
+                                icon: 'general',
+                                name: 'Geral',
+                                description: 'Resíduos diversos não classificados nas outras categorias'
+                            }
+                        };
+                        return typeMap[checkbox.value];
+                    });
 
                 // Criar novo ponto
                 const newPoint = {
